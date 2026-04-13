@@ -2,407 +2,880 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KOMETA PADEL</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Комета Padel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
         :root {
-            --tg-theme-bg-color: #050505;
-            --tg-theme-text-color: #ffffff;
-            --k-dark: #090A0F;
-            --k-navy: #12141D;
-            --k-blue-light: #1A1D29;
-            --k-yellow: #D4FF00; /* Modern neon lime-yellow */
-            --k-yellow-glow: rgba(212, 255, 0, 0.4);
-            --k-white: #FFFFFF;
-            --k-gray: #8A8E9B;
-            --k-glass: rgba(255, 255, 255, 0.04);
-            --k-glass-border: rgba(255, 255, 255, 0.06);
-            --safe-area-bottom: env(safe-area-inset-bottom);
+            --blue:        #29b6f6;
+            --blue-dark:   #0288d1;
+            --blue-light:  #e1f5fe;
+            --orange:      #ff7043;
+            --orange-dark: #e64a19;
+            --orange-light:#fff3e0;
+            --pink:        #f06292;
+            --pink-dark:   #c2185b;
+            --pink-light:  #fce4ec;
+            --bg:          #f4f8ff;
+            --surface:     #ffffff;
+            --border:      #e4eaf4;
+            --text:        #1a2340;
+            --text-muted:  #7a8baa;
+            --shadow-sm:   0 2px 8px rgba(41,182,246,0.10);
+            --shadow-md:   0 6px 24px rgba(41,182,246,0.16);
+            --radius-sm:   10px;
+            --radius-md:   16px;
+            --radius-lg:   22px;
+            --trans:       all 0.2s cubic-bezier(.4,0,.2,1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Manrope', sans-serif; }
-        
-        body { 
-            background-color: var(--k-dark); 
-            color: var(--k-white); 
-            line-height: 1.5; 
-            overflow-x: hidden; 
-            -webkit-font-smoothing: antialiased;
+        * { margin:0; padding:0; box-sizing:border-box;
+            -webkit-tap-highlight-color:rgba(41,182,246,0.1);
+            touch-action:manipulation; }
+
+        html, body {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background:var(--bg); color:var(--text);
+            min-height:100vh; overflow-x:hidden;
         }
 
-        /* Animated background orbs */
-        .bg-decor { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: var(--k-dark);
-        }
-        .bg-decor::before, .bg-decor::after {
-            content: ''; position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
-        }
-        .bg-decor::before {
-            width: 300px; height: 300px; background: rgba(212, 255, 0, 0.1); top: -100px; right: -100px;
-        }
-        .bg-decor::after {
-            width: 250px; height: 250px; background: rgba(26, 29, 41, 0.8); bottom: 10%; left: -100px;
-        }
-        
-        /* Page Transitions */
-        .page { 
-            display: none; padding: 20px 20px calc(100px + var(--safe-area-bottom)); min-height: 100vh; 
-            animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-            opacity: 0; transform: scale(0.98) translateY(10px);
-        }
-        .page.active { display: block; }
-        
-        @keyframes pageIn { 
-            to { opacity: 1; transform: scale(1) translateY(0); } 
+        button,.clickable {
+            cursor:pointer; -webkit-touch-callout:none;
+            -webkit-user-select:none; user-select:none;
+            touch-action:manipulation;
         }
 
-        /* Header */
-        .header { 
-            padding: 16px 20px; background: rgba(9, 10, 15, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--k-glass-border); 
-        }
-        .logo-wrap { display: flex; align-items: center; gap: 12px; }
-        .logo-symbol { 
-            width: 36px; height: 36px; background: var(--k-yellow); border-radius: 10px; display: flex; align-items: center; justify-content: center; 
-            color: var(--k-dark); font-weight: 800; font-size: 18px; box-shadow: 0 4px 20px var(--k-yellow-glow); 
-        }
-        .logo-text { font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
-        
-        .profile-btn {
-            width: 40px; height: 40px; background: var(--k-glass); border: 1px solid var(--k-glass-border); border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: 0.2s;
-        }
-        .profile-btn:active { transform: scale(0.92); }
+        /* ── Pages ── */
+        .page { display:none; padding:16px; padding-bottom:118px; min-height:100vh; }
+        .page.active { display:block; }
 
-        /* Typography */
-        h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
-        h2 { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
-        h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-        .subtitle { color: var(--k-yellow); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; margin-bottom: 8px; display: block; }
-        .text-muted { color: var(--k-gray); font-size: 14px; font-weight: 500; }
+        /* ── Header ── */
+        .header {
+            background:var(--surface); padding:14px 18px;
+            border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+            display:flex; justify-content:space-between; align-items:center;
+            box-shadow:0 2px 14px rgba(41,182,246,0.08);
+        }
+        .logo { display:flex; align-items:center; gap:11px; pointer-events:none; }
 
-        /* Cards */
-        .service-card, .trainer-card, .court-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--k-glass-border); border-radius: 24px; padding: 24px; margin-bottom: 16px; 
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden;
+        .logo-icon {
+            width:42px; height:42px;
+            background:linear-gradient(135deg,var(--blue),var(--pink));
+            border-radius:13px;
+            display:flex; align-items:center; justify-content:center; font-size:21px;
+            box-shadow:0 4px 14px rgba(41,182,246,0.3);
+            animation:logoFloat 3.2s ease-in-out infinite;
         }
-        .service-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%); pointer-events: none;
+        @keyframes logoFloat {
+            0%,100% { transform:translateY(0) rotate(-2deg); }
+            50%      { transform:translateY(-4px) rotate(3deg); }
         }
-        .service-card:active, .trainer-card:active, .court-card:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.05); }
-        
-        .card-icon { font-size: 32px; margin-bottom: 16px; display: inline-block; background: var(--k-glass); padding: 12px; border-radius: 16px; border: 1px solid var(--k-glass-border); }
 
-        .trainer-card { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 20px; }
-        .trainer-avatar { 
-            width: 56px; height: 56px; background: var(--k-blue-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; 
-            font-size: 24px; border: 1px solid var(--k-glass-border); 
-        }
-        .trainer-info { flex: 1; }
-        .price-tag { color: var(--k-yellow); font-weight: 800; font-size: 18px; }
+        .logo-text { font-weight:800; font-size:17px; letter-spacing:-0.3px; }
+        .logo-sub  { font-size:11px; color:var(--text-muted); font-weight:500; }
 
-        /* Buttons */
-        .btn-primary { 
-            background: var(--k-yellow); color: var(--k-dark); border: none; padding: 18px; border-radius: 16px; font-weight: 800; 
-            font-size: 16px; width: 100%; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 8px 24px rgba(212, 255, 0, 0.2); 
-            display: flex; justify-content: center; align-items: center; gap: 8px;
+        .header-profile-btn {
+            width:40px; height:40px; background:var(--blue-light);
+            border:none; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:18px;
+            transition:var(--trans);
         }
-        .btn-primary:active { transform: translateY(2px); box-shadow: 0 4px 12px rgba(212, 255, 0, 0.2); }
-        
-        .back-btn { 
-            display: inline-flex; align-items: center; gap: 8px; color: var(--k-gray); font-weight: 600; font-size: 15px; 
-            margin-bottom: 24px; padding: 8px 12px 8px 0; cursor: pointer; transition: 0.2s;
-        }
-        .back-btn:active { color: var(--k-white); transform: translateX(-4px); }
+        .header-profile-btn:active { transform:scale(0.88); background:var(--blue); }
 
-        /* Calendar */
-        .calendar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none; margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
-        .calendar::-webkit-scrollbar { display: none; }
-        .day-btn { 
-            flex: 0 0 68px; height: 90px; background: var(--k-glass); border: 1px solid var(--k-glass-border); border-radius: 20px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; gap: 4px;
+        /* ── Buttons base ── */
+        button {
+            background:var(--surface); border:1px solid var(--border);
+            color:var(--text); padding:12px 20px;
+            border-radius:var(--radius-sm); font-size:15px; font-family:inherit;
+            cursor:pointer; outline:none; -webkit-appearance:none;
+            transition:var(--trans); position:relative; overflow:hidden;
         }
-        .day-btn span:first-child { font-size: 12px; color: var(--k-gray); font-weight: 600; text-transform: uppercase; }
-        .day-btn span:last-child { font-size: 24px; font-weight: 800; }
-        .day-btn.active { background: var(--k-yellow); color: var(--k-dark); border-color: var(--k-yellow); box-shadow: 0 8px 20px rgba(212, 255, 0, 0.15); }
-        .day-btn.active span:first-child { color: rgba(0,0,0,0.6); }
 
-        /* Time Grid */
-        .times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
-        .time-btn { 
-            background: var(--k-glass); border: 1px solid var(--k-glass-border); padding: 16px 0; border-radius: 16px; 
-            color: var(--k-white); font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s;
+        .btn-back {
+            background:transparent; border:none; padding:8px 0; margin-bottom:20px;
+            display:flex; align-items:center; gap:8px;
+            color:var(--blue-dark); font-weight:600; font-size:15px;
+            width:auto; overflow:visible;
         }
-        .time-btn:active { transform: scale(0.95); }
-        .time-btn.selected { background: rgba(212, 255, 0, 0.1); border-color: var(--k-yellow); color: var(--k-yellow); }
+        .btn-back:active { transform:translateX(-4px); opacity:0.65; }
 
-        /* Bottom Nav */
-        .nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(9, 10, 15, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid var(--k-glass-border); display: flex; justify-content: space-around; 
-            padding: 16px 0 calc(16px + var(--safe-area-bottom)); z-index: 1000;
+        .btn-primary {
+            background:linear-gradient(135deg,var(--orange),#ff9800);
+            border:none; color:#fff; width:100%; font-weight:700; font-size:16px;
+            margin-top:14px; padding:17px; border-radius:var(--radius-md);
+            box-shadow:0 6px 20px rgba(255,112,67,0.35); letter-spacing:0.2px;
+            transition:transform 0.15s cubic-bezier(0.2,0.9,0.4,1.1),box-shadow 0.15s ease;
         }
-        .nav-item { 
-            background: none; border: none; color: var(--k-gray); display: flex; flex-direction: column; align-items: center; 
-            font-size: 11px; font-weight: 700; gap: 6px; cursor: pointer; transition: 0.3s; width: 60px;
-        }
-        .nav-icon { font-size: 20px; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.6; filter: grayscale(100%); }
-        .nav-item.active { color: var(--k-yellow); }
-        .nav-item.active .nav-icon { transform: translateY(-4px) scale(1.1); opacity: 1; filter: grayscale(0%); }
+        .btn-primary:active { transform:scale(0.96)!important; box-shadow:0 2px 8px rgba(255,112,67,0.2)!important; }
 
-        /* Success & Profile specific */
-        .success-icon { width: 96px; height: 96px; background: var(--k-yellow); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--k-dark); box-shadow: 0 12px 32px var(--k-yellow-glow); }
-        .profile-header { text-align: center; margin-bottom: 32px; margin-top: 20px; }
-        .profile-avatar { width: 96px; height: 96px; margin: 0 auto 16px; background: var(--k-blue-light); border: 2px solid var(--k-yellow); border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        /* ── Ripple ── */
+        .ripple-wave {
+            position:absolute; border-radius:50%; transform:scale(0);
+            pointer-events:none;
+            animation:rippleAnim 0.55s cubic-bezier(0.2,0.9,0.4,1) forwards;
+        }
+        @keyframes rippleAnim { to { transform:scale(4); opacity:0; } }
+
+        /* ── Service cards ── */
+        .card-btn {
+            width:100%; text-align:left; background:var(--surface);
+            border:1.5px solid var(--border); border-radius:var(--radius-lg);
+            padding:20px; margin-bottom:13px; position:relative;
+            display:block; color:inherit; box-shadow:var(--shadow-sm);
+            overflow:hidden; will-change:transform;
+            transition:border-color 0.22s ease, box-shadow 0.22s ease;
+        }
+        .card-btn::before {
+            content:''; position:absolute; top:0; left:-100%; right:0; height:3px;
+            background:linear-gradient(90deg, transparent 0%, var(--card-accent,var(--blue)) 40%, #fff 55%, var(--card-accent,var(--blue)) 70%, transparent 100%);
+            animation:shimmerBar 2.8s ease-in-out infinite;
+        }
+        @keyframes shimmerBar { 0%{left:-100%} 60%,100%{left:100%} }
+
+        .card-btn:hover { box-shadow:0 8px 28px rgba(41,182,246,0.18); border-color:var(--card-accent,var(--blue)); }
+        .card-court { --card-accent:var(--blue); }
+        .card-train { --card-accent:var(--orange); }
+        .card-group { --card-accent:var(--pink); }
+
+        .service-icon {
+            width:48px; height:48px; border-radius:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:24px; margin-bottom:12px;
+            transition:transform 0.3s cubic-bezier(0.2,0.9,0.4,1.4);
+        }
+        .card-btn:hover .service-icon { transform:scale(1.12) rotate(4deg); }
+
+        .bg-blue   { background:var(--blue-light); }
+        .bg-orange { background:var(--orange-light); }
+        .bg-pink   { background:var(--pink-light); }
+
+        h1 { font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.4px; }
+        h2 { font-size:21px; font-weight:800; margin-bottom:6px; letter-spacing:-0.3px; }
+        h3 { font-size:17px; font-weight:700; margin-bottom:4px; }
+        p  { color:var(--text-muted); font-size:14px; line-height:1.55; }
+
+        .section-label {
+            font-size:12px; font-weight:700; letter-spacing:1px;
+            text-transform:uppercase; color:var(--text-muted);
+            margin-bottom:12px; margin-top:22px;
+        }
+
+        .tag { display:inline-block; padding:4px 11px; border-radius:20px; font-size:11px; font-weight:600; margin-right:6px; margin-top:8px; }
+        .tag-blue   { background:var(--blue-light);   color:var(--blue-dark); }
+        .tag-orange { background:var(--orange-light);  color:var(--orange-dark); }
+        .tag-pink   { background:var(--pink-light);    color:var(--pink-dark); }
+
+        /* ── Greeting block — animated gradient ── */
+        .greeting-block {
+            background:linear-gradient(135deg,#29b6f6,#43e0ff,#f06292,#ff7043,#29b6f6);
+            background-size:300% 300%;
+            animation:gradientShift 5s ease infinite;
+            border-radius:var(--radius-lg);
+            padding:22px 20px; margin-bottom:22px;
+            color:#fff; position:relative; overflow:hidden;
+            box-shadow:0 8px 28px rgba(41,182,246,0.35);
+        }
+        @keyframes gradientShift {
+            0%   { background-position:0% 50%; }
+            50%  { background-position:100% 50%; }
+            100% { background-position:0% 50%; }
+        }
+        .greeting-block h1 { color:#fff; font-size:22px; }
+        .greeting-block p  { color:rgba(255,255,255,0.85); font-size:13px; }
+
+        .greeting-comet {
+            position:absolute; right:14px; top:10px; font-size:54px; opacity:0.2;
+            animation:cometFloat 4.5s ease-in-out infinite; pointer-events:none;
+        }
+        @keyframes cometFloat {
+            0%,100% { transform:translate(0,0) rotate(-5deg); }
+            40%      { transform:translate(-5px,-8px) rotate(6deg); }
+            70%      { transform:translate(3px,3px) rotate(-3deg); }
+        }
+
+        /* ── Calendar ── */
+        .calendar {
+            display:flex; gap:9px; overflow-x:auto;
+            padding:4px 0 18px; margin:0 -16px; padding-left:16px;
+            scrollbar-width:none;
+        }
+        .calendar::-webkit-scrollbar { display:none; }
+
+        .day-btn {
+            flex-shrink:0; width:66px; height:78px;
+            background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-md);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            color:var(--text); font-family:inherit; padding:0; will-change:transform;
+            transition:background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .day-btn.active {
+            background:linear-gradient(145deg,var(--blue),#00b0f0);
+            border-color:var(--blue); color:#fff;
+            box-shadow:0 6px 18px rgba(41,182,246,0.42);
+        }
+        .day-name { font-size:10px; font-weight:600; opacity:0.75; margin-bottom:5px; text-transform:uppercase; letter-spacing:0.4px; }
+        .day-num  { font-size:22px; font-weight:800; }
+
+        /* ── Time slots ── */
+        .times { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:14px; }
+        .time-btn {
+            background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-sm); padding:15px;
+            font-size:15px; font-weight:600; color:var(--text); font-family:inherit;
+            will-change:transform;
+            transition:background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .time-btn.selected {
+            background:linear-gradient(135deg,var(--orange),#ffa726);
+            border-color:var(--orange); color:#fff;
+            box-shadow:0 5px 16px rgba(255,112,67,0.38);
+        }
+        .time-btn:disabled { opacity:0.3; cursor:not-allowed; background:var(--bg); box-shadow:none; }
+
+        /* ── Courts ── */
+        .court-btn {
+            width:100%; background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-md); padding:18px; margin-bottom:12px;
+            text-align:left; color:inherit; box-shadow:var(--shadow-sm);
+            will-change:transform;
+            transition:border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .court-btn:hover { border-color:var(--blue); box-shadow:0 6px 24px rgba(41,182,246,0.18); }
+        .court-header { display:flex; justify-content:space-between; align-items:center; }
+        .court-num {
+            width:44px; height:44px; border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            font-weight:800; font-size:18px; margin-right:14px;
+        }
+        .court-indoor  { background:var(--blue-light);  color:var(--blue-dark);  border:1.5px solid #b3e5fc; }
+        .court-outdoor { background:var(--pink-light);  color:var(--pink-dark);  border:1.5px solid #f8bbd9; }
+        .price-big { font-size:22px; font-weight:800; color:var(--blue-dark); }
+        .price-sub { color:var(--text-muted); font-size:13px; }
+
+        /* ── Summary ── */
+        .summary-box {
+            background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-lg); padding:20px; margin:14px 0;
+            box-shadow:var(--shadow-sm);
+        }
+        .row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+        .row:last-child { margin-bottom:0; }
+        .total-row { border-top:2px solid var(--border); padding-top:14px; margin-top:14px; font-size:19px; font-weight:700; }
+        .accent-blue { color:var(--blue-dark); }
+
+        .checkbox-btn {
+            width:100%; background:var(--bg); border:1.5px solid var(--border);
+            border-radius:var(--radius-sm); padding:15px; margin-bottom:8px;
+            display:flex; justify-content:space-between; align-items:center;
+            font-family:inherit; font-size:14px; font-weight:600; color:var(--text);
+            cursor:pointer;
+            transition:border-color 0.2s ease, background 0.2s ease;
+        }
+        .checkbox-btn:has(input:checked) { border-color:var(--orange); background:var(--orange-light); }
+        .checkbox-btn input { accent-color:var(--orange); width:22px; height:22px; }
+
+        /* ── Total bar ── */
+        .total-bar {
+            position:fixed; bottom:76px; left:12px; right:12px; z-index:100;
+            background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-lg); padding:16px 18px;
+            box-shadow:0 -4px 30px rgba(41,182,246,0.13);
+        }
+        .total-bar .total-row { border-top:none; padding-top:0; margin-top:0; }
+
+        /* ── Price pop animation ── */
+        @keyframes pricePop {
+            0%   { transform:scale(1); }
+            40%  { transform:scale(1.25); color:var(--orange); }
+            100% { transform:scale(1); }
+        }
+        .price-pop { animation:pricePop 0.4s cubic-bezier(0.2,0.9,0.4,1.2); }
+
+        /* ── Nav ── */
+        .nav {
+            position:fixed; bottom:0; left:0; right:0;
+            background:rgba(255,255,255,0.97); backdrop-filter:blur(16px);
+            border-top:1px solid var(--border);
+            display:flex; justify-content:space-around;
+            padding:10px 0 22px; z-index:1000;
+            box-shadow:0 -4px 20px rgba(41,182,246,0.07);
+        }
+        .nav-btn {
+            background:transparent; border:none; color:var(--text-muted);
+            display:flex; flex-direction:column; align-items:center; gap:3px;
+            font-size:11px; font-weight:600; padding:6px 18px;
+            border-radius:14px; transition:color 0.2s ease; -webkit-appearance:none;
+        }
+        .nav-btn.active { color:var(--blue-dark); }
+        .nav-pill {
+            width:48px; height:32px; border-radius:12px;
+            display:flex; align-items:center; justify-content:center; font-size:20px;
+            transition:background 0.25s ease, transform 0.35s cubic-bezier(0.2,0.9,0.4,1.4);
+        }
+        .nav-btn.active .nav-pill { background:var(--blue-light); transform:scale(1.15) translateY(-3px); }
+
+        /* ── QR ── */
+        .qr-box {
+            background:#fff; border:2px solid var(--border);
+            border-radius:var(--radius-md); padding:22px; margin:20px 0;
+            text-align:center; box-shadow:var(--shadow-sm);
+        }
+        .qr-pattern {
+            height:130px;
+            background:repeating-conic-gradient(#1a2340 0% 25%,#fff 0% 50%) 0 0/16px 16px;
+            border-radius:8px; opacity:0.85;
+        }
+
+        /* ── Trainer ── */
+        .trainer-btn {
+            width:100%; background:var(--surface); border:1.5px solid var(--border);
+            border-radius:var(--radius-sm); padding:13px 16px; margin-bottom:9px;
+            text-align:left; color:inherit;
+            transition:border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .trainer-btn.selected { border-color:var(--blue); background:var(--blue-light); box-shadow:0 4px 14px rgba(41,182,246,0.22); }
+        .avatar { background:linear-gradient(135deg,var(--blue-light),var(--pink-light)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--border); }
+
+        /* ── Profile ── */
+        .profile-avatar {
+            width:82px; height:82px;
+            background:linear-gradient(135deg,var(--blue),var(--pink));
+            border-radius:50%; margin:0 auto 14px;
+            display:flex; align-items:center; justify-content:center; font-size:38px;
+            animation:profilePulse 3s ease-in-out infinite;
+        }
+        @keyframes profilePulse {
+            0%,100% { box-shadow:0 8px 28px rgba(41,182,246,0.32); }
+            50%      { box-shadow:0 8px 40px rgba(240,98,146,0.45); }
+        }
+
+        /* ── Success ── */
+        .success-icon {
+            width:90px; height:90px;
+            background:linear-gradient(135deg,var(--blue),var(--pink));
+            border-radius:28px;
+            display:flex; align-items:center; justify-content:center; font-size:42px;
+            margin:0 auto 20px;
+        }
+
+        /* ── Payment ── */
+        .btn-telegram {
+            background:linear-gradient(135deg,#29b6f6,#039be5);
+            border:none; color:#fff; width:100%; font-weight:700; font-size:16px;
+            padding:17px; border-radius:var(--radius-md);
+            box-shadow:0 6px 20px rgba(41,182,246,0.35);
+        }
+        .btn-card {
+            background:var(--surface); border:1.5px solid var(--border);
+            color:var(--text); width:100%; font-weight:700; font-size:16px;
+            padding:17px; border-radius:var(--radius-md); margin-top:10px;
+        }
+
+        /* ── Confetti canvas ── */
+        #confetti-canvas {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events:none; z-index:9999;
+        }
+
+        .chip-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+        .center { text-align:center; }
+        .hidden { display:none!important; }
+
+        @media (prefers-reduced-motion:reduce) {
+            *,*::before,*::after { animation:none!important; transition:none!important; }
+        }
     </style>
 </head>
 <body>
-<div class="bg-decor"></div>
 
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ═══ Header ═══ -->
 <div class="header">
-    <div class="logo-wrap">
-        <div class="logo-symbol">K</div>
-        <div class="logo-text">KOMETA</div>
+    <div class="logo">
+        <div class="logo-icon">☄️</div>
+        <div>
+            <div class="logo-text">КОМЕТА</div>
+            <div class="logo-sub">Padel Arena</div>
+        </div>
     </div>
-    <div class="profile-btn" onclick="goTo('profile')">👤</div>
+    <button class="header-profile-btn" onclick="goTo('profile')">👤</button>
 </div>
 
-<!-- HOME -->
+<!-- ═══ HOME ═══ -->
 <div id="home" class="page active">
-    <span class="subtitle">Padel Arena</span>
-    <h1>Что выберем?</h1>
-    <div style="margin-top: 32px;">
-        <div class="service-card" onclick="selectService('court')">
-            <span class="card-icon">🎾</span>
-            <h3>Аренда корта</h3>
-            <p class="text-muted">Играйте с друзьями в удобное время</p>
-        </div>
-        <div class="service-card" onclick="selectService('training')">
-            <span class="card-icon">🏆</span>
-            <h3>Тренировка</h3>
-            <p class="text-muted">Индивидуальные занятия с профи клуба</p>
-        </div>
+    <div class="greeting-block">
+        <div class="greeting-comet">☄️</div>
+        <h1>Здравствуйте! 👋</h1>
+        <p>Выберите услугу для бронирования</p>
     </div>
+    <div class="section-label">Услуги</div>
+    <button class="card-btn card-court" onclick="selectService('court')">
+        <div class="service-icon bg-blue">🏓</div>
+        <h3>Аренда корта</h3>
+        <p>Занимайте корт в удобное время</p>
+        <div class="chip-row">
+            <span class="tag tag-blue">4 корта</span>
+            <span class="tag tag-blue">08:00–23:00</span>
+            <span class="tag tag-blue">от 1 000 ₽/час</span>
+        </div>
+    </button>
+    <button class="card-btn card-train" onclick="selectService('training')">
+        <div class="service-icon bg-orange">🎾</div>
+        <h3>Тренировка</h3>
+        <p>Индивидуальные занятия с тренером</p>
+        <div class="chip-row">
+            <span class="tag tag-orange">8 тренеров</span>
+            <span class="tag tag-orange">от 3 200 ₽/час</span>
+        </div>
+    </button>
+    <button class="card-btn card-group" onclick="selectService('group')">
+        <div class="service-icon bg-pink">👥</div>
+        <h3>Групповое занятие</h3>
+        <p>Играйте вместе с друзьями</p>
+        <div class="chip-row">
+            <span class="tag tag-pink">3–4 человека</span>
+            <span class="tag tag-pink">от 700 ₽/чел</span>
+        </div>
+    </button>
 </div>
 
-<!-- DATETIME -->
-<div id="datetime" class="page">
-    <div class="back-btn" onclick="goTo('home')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Назад
-    </div>
-    <h2>Выберите время</h2>
+<!-- ═══ DATE ═══ -->
+<div id="date" class="page">
+    <button class="btn-back" onclick="goTo('home')">← Назад</button>
+    <h2>Выберите дату</h2>
+    <p id="service-name" style="margin-bottom:18px;color:var(--orange);font-weight:600;font-size:15px;">Аренда корта</p>
     <div class="calendar" id="calendar"></div>
-    <div class="times-grid" id="times-container"></div>
-</div>
-
-<!-- TRAINERS -->
-<div id="trainers" class="page">
-    <div class="back-btn" onclick="goTo('datetime')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Назад
+    <div class="section-label">Время</div>
+    <div class="times" id="times"></div>
+    <div id="trainer-section" class="hidden">
+        <div class="section-label" style="margin-top:26px;">Тренер</div>
+        <div id="trainers-list-date"></div>
     </div>
-    <h2>Выберите тренера</h2>
-    <div id="trainers-list"></div>
 </div>
 
-<!-- COURTS -->
-<div id="courts" class="page">
-    <div class="back-btn" onclick="goTo('datetime')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Назад
+<!-- ═══ COURT ═══ -->
+<div id="court" class="page">
+    <button class="btn-back" onclick="goTo('date')">← Назад</button>
+    <h2>Выберите корт</h2>
+    <p id="selected-date-time" style="margin-bottom:20px;color:var(--blue-dark);font-weight:600;font-size:15px;">Сегодня, 19:00</p>
+    <div id="courts-container"></div>
+</div>
+
+<!-- ═══ DETAILS ═══ -->
+<div id="details" class="page">
+    <button class="btn-back" onclick="goTo('court')">← Назад</button>
+    <h2>Детали брони</h2>
+    <div class="summary-box">
+        <div class="row" style="margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div class="service-icon bg-blue" style="margin:0;">🏓</div>
+                <div>
+                    <div style="font-weight:800;font-size:17px;">Корт <span id="detail-court-num">1</span></div>
+                    <div style="color:var(--text-muted);font-size:13px;" id="detail-time-str">Завтра, 19:00</div>
+                </div>
+            </div>
+            <div class="price-big" id="detail-price">3 500 ₽</div>
+        </div>
+        <div id="trainer-section-details" class="hidden">
+            <div class="section-label" style="margin-top:4px;">Тренер</div>
+            <div id="trainers-list-details"></div>
+        </div>
+        <div style="margin-top:18px;">
+            <div class="section-label" style="margin-top:0;">Дополнительно</div>
+            <label class="checkbox-btn">
+                <span>🏸 Аренда ракетки (+400 ₽)</span>
+                <input type="checkbox" id="extra-racket" onchange="updatePrice()">
+            </label>
+        </div>
     </div>
-    <h2>Свободные корты</h2>
-    <div id="courts-list"></div>
-</div>
-
-<!-- CHECKOUT -->
-<div id="checkout" class="page">
-    <div class="back-btn" onclick="goTo('home')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Отмена
+    <div class="total-bar">
+        <div class="total-row" style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--text-muted);font-size:15px;">Итого</span>
+            <span class="accent-blue" style="font-size:26px;font-weight:800;" id="total">3 500 ₽</span>
+        </div>
+        <button class="btn-primary" onclick="goTo('payment')">Перейти к оплате →</button>
     </div>
-    <h2>Подтверждение</h2>
-    <div class="service-card" style="background: var(--k-blue-light); border-color: var(--k-yellow); padding: 24px;">
-        <span class="subtitle">Ваша запись</span>
-        <h3 id="res-title" style="font-size: 24px; margin-bottom: 8px;">Аренда корта</h3>
-        <p id="res-details" style="color: var(--k-white); font-weight: 500; font-size: 16px; margin-bottom: 16px; line-height: 1.5;"></p>
-        <div id="res-price" class="price-tag" style="font-size: 28px;">0 ₽</div>
+</div>
+
+<!-- ═══ PAYMENT ═══ -->
+<div id="payment" class="page" style="padding-bottom:200px;">
+    <button class="btn-back" onclick="goTo('details')">← Назад</button>
+    <div class="center" style="margin:50px 0 36px;">
+        <div class="success-icon" id="payment-icon" style="background:linear-gradient(135deg,var(--orange),#ffd54f);">🛡️</div>
+        <h2>К оплате</h2>
+        <div style="font-size:36px;font-weight:800;color:var(--orange);margin:10px 0;" id="pay-total">3 500 ₽</div>
+        <p>Безопасная оплата</p>
     </div>
-    <button class="btn-primary" style="margin-top: 32px;" onclick="goTo('success')">
-        Оплатить и забронировать
-    </button>
+    <button class="btn-telegram" onclick="processPayment()">✈️ Оплатить через Telegram</button>
+    <button class="btn-card" onclick="processPayment()">💳 Оплатить картой</button>
 </div>
 
-<!-- SUCCESS -->
-<div id="success" class="page" style="text-align: center; padding-top: 80px;">
-    <div class="success-icon">✓</div>
-    <h1>Готово!</h1>
-    <p class="text-muted" style="margin-bottom: 40px; font-size: 16px;">Ждем вас в Kometa Padel</p>
-    <button class="btn-primary" onclick="goTo('home')">Вернуться на главную</button>
+<!-- ═══ SUCCESS ═══ -->
+<div id="success" class="page center" style="padding-top:50px;">
+    <div class="success-icon" id="success-icon">✅</div>
+    <h1 style="margin-bottom:6px;">Бронь подтверждена!</h1>
+    <p style="margin-bottom:28px;">Ждём вас на площадке</p>
+    <div class="summary-box" style="text-align:left;max-width:400px;margin:0 auto 16px;">
+        <div class="row">
+            <span class="price-sub">Корт</span>
+            <span style="font-weight:800;" id="succ-court">Корт 1</span>
+        </div>
+        <div class="row">
+            <span class="price-sub">Время</span>
+            <span style="font-weight:800;" id="succ-time">19:00</span>
+        </div>
+        <div class="row">
+            <span class="price-sub">Сумма</span>
+            <span style="font-weight:800;color:var(--orange);" id="succ-price">3 500 ₽</span>
+        </div>
+    </div>
+    <div class="qr-box">
+        <div class="qr-pattern"></div>
+        <p style="color:var(--text-muted);margin-top:10px;font-size:12px;font-weight:600;">Покажите QR-код администратору</p>
+    </div>
+    <button class="btn-primary" onclick="goTo('home')" style="margin-top:30px;">На главную</button>
 </div>
 
-<!-- PROFILE -->
+<!-- ═══ PROFILE ═══ -->
 <div id="profile" class="page">
-    <div class="profile-header">
-        <div class="profile-avatar">👨‍🚀</div>
-        <h2>Игрок Кометы</h2>
-        <p class="text-muted" style="font-size: 16px;">+7 (999) 000-00-00</p>
+    <button class="btn-back" onclick="goTo('home')">← Назад</button>
+    <div class="center" style="margin-bottom:28px;">
+        <div class="profile-avatar">👤</div>
+        <h2>Иван Петров</h2>
+        <p>+7 (981) ***-**-00</p>
     </div>
-    <div class="service-card" style="margin-top: 32px;">
-        <h3 style="margin-bottom: 8px;">Мои игры</h3>
-        <p class="text-muted">У вас пока нет активных броней</p>
-    </div>
+    <button class="card-btn" onclick="alert('История бронирований')" style="padding:18px 20px;">
+        <div class="row" style="margin:0;">
+            <span style="font-weight:600;display:flex;align-items:center;gap:10px;"><span>📋</span> История бронирований</span>
+            <span style="color:var(--text-muted);font-size:18px;font-weight:300;">›</span>
+        </div>
+    </button>
+    <button class="card-btn" onclick="alert('Абонементы: 5 посещений - 15000₽')" style="padding:18px 20px;">
+        <div class="row" style="margin:0;">
+            <span style="font-weight:600;display:flex;align-items:center;gap:10px;"><span>🎫</span> Мои абонементы</span>
+            <span class="tag tag-pink" style="margin:0;">2 активных</span>
+        </div>
+    </button>
 </div>
 
-<!-- NAVIGATION -->
+<!-- ═══ NAV ═══ -->
 <div class="nav">
-    <button class="nav-item active" onclick="goTo('home')">
-        <span class="nav-icon">🏠</span>
-        <span>Главная</span>
+    <button class="nav-btn active" id="nav-home" onclick="goTo('home')">
+        <div class="nav-pill">🏠</div><span>Главная</span>
     </button>
-    <button class="nav-item" onclick="selectService('court')">
-        <span class="nav-icon">📅</span>
-        <span>Запись</span>
+    <button class="nav-btn" id="nav-book" onclick="selectService('court')">
+        <div class="nav-pill">📅</div><span>Бронь</span>
     </button>
-    <button class="nav-item" onclick="goTo('profile')">
-        <span class="nav-icon">👤</span>
-        <span>Профиль</span>
+    <button class="nav-btn" id="nav-profile" onclick="goTo('profile')">
+        <div class="nav-pill">👤</div><span>Профиль</span>
     </button>
 </div>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    
-    // Адаптация цвета под новый стиль
-    tg.headerColor = '#090A0F';
-    tg.backgroundColor = '#090A0F';
+/* ─── State ─── */
+let state = { service:'', date:'', time:'', court:'', price:3500, trainer:null };
 
-    let booking = { service: '', date: '', time: '', trainer: null, court: null, price: 0 };
+const trainers = [
+    { id:1, name:'Гусев Артур',    role:'Главный тренер',   price:7000 },
+    { id:2, name:'Петрова Вилена', role:'Чемпионка России', price:7000 },
+    { id:3, name:'Борисова Лиза',  role:'Тренер',           price:3200 },
+    { id:4, name:'Иванов Алексей', role:'Старший тренер',   price:3600 }
+];
 
-    const trainers = [
-        { id: 1, name: 'Гусев Артур', role: 'Главный тренер', price: 7000, icon: '👨‍🏫' },
-        { id: 2, name: 'Петрова Вилена', role: 'PRO тренер', price: 5500, icon: '👩‍🏫' },
-        { id: 3, name: 'Смирнов Илья', role: 'Тренер', price: 4500, icon: '🎾' }
-    ];
+document.addEventListener('DOMContentLoaded', () => {
+    generateCalendar();
+    generateTimes();
+    animatePageIn('home');
+    attachRipple();
+});
 
-    function goTo(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        
-        // Обновляем состояние нижнего меню
-        if(['home', 'profile'].includes(id)) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(id === 'home') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(id === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
-        } else if (id !== 'success') {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
-        }
-        
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
+/* ─── GSAP page stagger ─── */
+function animatePageIn(pageId) {
+    const page = document.getElementById(pageId);
+    const kids = Array.from(page.children);
+    gsap.set(kids, { opacity:0, y:24, scale:0.97 });
+    gsap.to(kids, {
+        opacity:1, y:0, scale:1,
+        duration:0.44, stagger:0.075,
+        ease:'power3.out', delay:0.03
+    });
+}
 
-    function selectService(type) {
-        booking.service = type;
-        initDateTime();
-        goTo('datetime');
-    }
-
-    function initDateTime() {
-        const cal = document.getElementById('calendar');
-        cal.innerHTML = '';
-        const today = new Date();
-        for(let i = 0; i < 7; i++) {
-            const d = new Date(); d.setDate(today.getDate() + i);
-            const btn = document.createElement('div');
-            btn.className = `day-btn ${i === 0 ? 'active' : ''}`;
-            btn.innerHTML = `<span>${i === 0 ? 'Сегодня' : d.toLocaleDateString('ru',{weekday:'short'})}</span><span>${d.getDate()}</span>`;
-            btn.onclick = () => {
-                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                booking.date = d.toLocaleDateString('ru', {day:'numeric', month:'long'});
-            };
-            cal.appendChild(btn);
-            if(i === 0) booking.date = d.toLocaleDateString('ru', {day:'numeric', month:'long'});
-        }
-
-        const times = document.getElementById('times-container');
-        times.innerHTML = '';
-        ['10:00','12:00','14:00','16:00','18:00','20:00'].forEach(t => {
-            const btn = document.createElement('button');
-            btn.className = 'time-btn';
-            btn.innerText = t;
-            btn.onclick = () => {
-                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                booking.time = t;
-                
-                // Легкая задержка для визуального эффекта нажатия
-                setTimeout(() => {
-                    if(booking.service === 'training') renderTrainers();
-                    else renderCourts();
-                }, 200);
-            };
-            times.appendChild(btn);
+/* ─── Page routing ─── */
+function goTo(pageId) {
+    const cur = document.querySelector('.page.active');
+    if (cur && cur.id !== pageId) {
+        gsap.to(cur, {
+            opacity:0, y:-14, scale:0.98, duration:0.18, ease:'power2.in',
+            onComplete: () => { cur.classList.remove('active'); _showPage(pageId); }
         });
+    } else {
+        _showPage(pageId);
     }
+}
 
-    function renderTrainers() {
-        const list = document.getElementById('trainers-list');
-        list.innerHTML = trainers.map(t => `
-            <div class="trainer-card" onclick="confirmBooking('trainer', ${t.id})">
-                <div class="trainer-avatar">${t.icon}</div>
-                <div class="trainer-info">
-                    <h3>${t.name}</h3>
-                    <p class="text-muted">${t.role}</p>
-                </div>
-                <div class="price-tag">${t.price.toLocaleString()} ₽</div>
-            </div>
-        `).join('');
-        goTo('trainers');
+function _showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0,0);
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const navMap = { home:'nav-home', profile:'nav-profile' };
+    if (navMap[pageId]) document.getElementById(navMap[pageId]).classList.add('active');
+    animatePageIn(pageId);
+
+    // Court page: animate cards after they exist
+    if (pageId === 'court') {
+        setTimeout(() => {
+            const btns = document.querySelectorAll('.court-btn');
+            if (btns.length) {
+                gsap.from(btns, { x:36, opacity:0, duration:0.38, stagger:0.09, ease:'power3.out', delay:0.1 });
+            }
+        }, 80);
     }
+    // Payment icon spring
+    if (pageId === 'payment') {
+        setTimeout(() => {
+            gsap.fromTo('#payment-icon', {scale:0.4,rotation:-18,opacity:0}, {scale:1,rotation:0,opacity:1,duration:0.6,ease:'back.out(2.2)'});
+        }, 120);
+    }
+}
 
-    function renderCourts() {
-        const list = document.getElementById('courts-list');
-        list.innerHTML = [1,2,3].map(i => `
-            <div class="court-card" onclick="confirmBooking('court', ${i})">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+/* ─── Ripple on every button ─── */
+function attachRipple() {
+    document.addEventListener('pointerdown', e => {
+        const btn = e.target.closest('button');
+        if (!btn || btn.disabled) return;
+        const r = btn.getBoundingClientRect();
+        const size = Math.max(r.width, r.height) * 1.7;
+        const el = document.createElement('span');
+        el.className = 'ripple-wave';
+        const isPrimary = btn.classList.contains('btn-primary') || btn.classList.contains('btn-telegram');
+        Object.assign(el.style, {
+            width:size+'px', height:size+'px',
+            left:(e.clientX-r.left-size/2)+'px',
+            top:(e.clientY-r.top-size/2)+'px',
+            background: isPrimary ? 'rgba(255,255,255,0.3)' : 'rgba(41,182,246,0.15)'
+        });
+        btn.appendChild(el);
+        setTimeout(() => el.remove(), 620);
+    });
+}
+
+/* ─── Service ─── */
+function selectService(type) {
+    state.service = type;
+    const names = { court:'Аренда корта', training:'Тренировка', group:'Групповое занятие' };
+    document.getElementById('service-name').textContent = names[type];
+    const show = type === 'training';
+    document.getElementById('trainer-section')?.classList.toggle('hidden', !show);
+    document.getElementById('trainer-section-details')?.classList.toggle('hidden', !show);
+    if (show) { renderTrainers(); } else { state.trainer = null; }
+    goTo('date');
+}
+
+/* ─── Calendar — bounce-in stagger ─── */
+function generateCalendar() {
+    const cal  = document.getElementById('calendar');
+    const days = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+    const today = new Date();
+    let html = '';
+    for (let i = 0; i < 10; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const nm = i === 0 ? 'Сег' : days[d.getDay()];
+        html += `<button class="day-btn ${i===0?'active':''}" onclick="pickDate('${d.toDateString()}',this)">
+                    <span class="day-name">${nm}</span>
+                    <span class="day-num">${d.getDate()}</span>
+                 </button>`;
+    }
+    cal.innerHTML = html;
+    state.date = today.toDateString();
+    gsap.from('.day-btn', { scale:0.55, opacity:0, duration:0.42, stagger:0.04, ease:'back.out(2)', delay:0.18 });
+}
+
+function pickDate(dateStr, btn) {
+    state.date = dateStr;
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    gsap.fromTo(btn, {scale:0.85}, {scale:1, duration:0.38, ease:'back.out(2.2)'});
+}
+
+/* ─── Times — fade-up stagger ─── */
+function generateTimes() {
+    const c = document.getElementById('times');
+    let html = '';
+    for (let h = 8; h <= 22; h++) {
+        const booked = h === 12 || h === 18;
+        html += `<button class="time-btn" ${booked?'disabled':''} onclick="pickTime('${h}:00',this)">${h}:00</button>`;
+    }
+    c.innerHTML = html;
+    gsap.from('.time-btn', { y:18, opacity:0, duration:0.32, stagger:0.03, ease:'power2.out', delay:0.22 });
+}
+
+function pickTime(time, btn) {
+    if (btn.disabled) return;
+    state.time = time;
+    document.querySelectorAll('.time-btn').forEach(b => { if(!b.disabled) b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    gsap.fromTo(btn, {scale:0.86}, {scale:1, duration:0.4, ease:'back.out(2)'});
+    setTimeout(() => { showCourts(); goTo('court'); }, 220);
+}
+
+/* ─── Courts ─── */
+function showCourts() {
+    const d = new Date(state.date);
+    document.getElementById('selected-date-time').textContent = `${d.getDate()}.${d.getMonth()+1}, ${state.time}`;
+    const c = document.getElementById('courts-container');
+    let html = '';
+    for (let i=1;i<=4;i++) {
+        const price = 3000 + i*200;
+        const cls   = i<=2 ? 'court-indoor' : 'court-outdoor';
+        const label = i<=2 ? 'Крытый' : 'Открытый';
+        html += `<button class="court-btn" onclick="selectCourt(${i},${price})">
+            <div class="court-header">
+                <div style="display:flex;align-items:center;">
+                    <div class="court-num ${cls}">${i}</div>
                     <div>
-                        <h3 style="margin-bottom: 8px;">Корт №${i}</h3>
-                        <p class="text-muted" style="font-size: 14px;">Панорамное остекление, WPT покрытие</p>
+                        <div style="font-weight:800;font-size:16px;">Корт ${i}</div>
+                        <div style="color:var(--text-muted);font-size:13px;">${label}</div>
                     </div>
-                    <span class="card-icon" style="margin: 0; padding: 10px; font-size: 20px;">🎾</span>
                 </div>
-                <div class="price-tag" style="margin-top: 16px;">3 500 ₽</div>
+                <div style="text-align:right;">
+                    <div class="price-big">${price.toLocaleString()} ₽</div>
+                    <div class="price-sub">/час</div>
+                </div>
             </div>
-        `).join('');
-        goTo('courts');
+        </button>`;
     }
+    c.innerHTML = html;
+}
 
-    function confirmBooking(type, id) {
-        if(type === 'trainer') {
-            const t = trainers.find(x => x.id === id);
-            booking.trainer = t;
-            booking.price = t.price;
-            document.getElementById('res-title').innerText = 'Тренировка';
-            document.getElementById('res-details').innerHTML = `<span style="color:var(--k-gray)">Дата:</span> ${booking.date} в ${booking.time}<br><span style="color:var(--k-gray)">Тренер:</span> ${t.name}`;
-        } else {
-            booking.court = id;
-            booking.price = 3500;
-            document.getElementById('res-title').innerText = 'Аренда корта';
-            document.getElementById('res-details').innerHTML = `<span style="color:var(--k-gray)">Дата:</span> ${booking.date} в ${booking.time}<br><span style="color:var(--k-gray)">Корт:</span> №${id}`;
-        }
-        document.getElementById('res-price').innerText = booking.price.toLocaleString() + ' ₽';
-        goTo('checkout');
-    }
+function selectCourt(num, price) {
+    state.court = num; state.price = price;
+    document.getElementById('detail-court-num').textContent = num;
+    document.getElementById('detail-price').textContent = price.toLocaleString()+' ₽';
+    const d = new Date(state.date);
+    document.getElementById('detail-time-str').textContent = `${d.getDate()}.${d.getMonth()+1}, ${state.time}`;
+    updatePrice();
+    goTo('details');
+}
+
+/* ─── Trainers ─── */
+function renderTrainers() {
+    ['trainers-list-date','trainers-list-details'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = trainers.map(t => `
+            <button class="trainer-btn" onclick="pickTrainer(${t.id},this)">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div class="avatar" style="width:40px;height:40px;">👤</div>
+                        <div>
+                            <div style="font-weight:700;font-size:14px;">${t.name}</div>
+                            <div style="font-size:12px;color:var(--text-muted);">${t.role}</div>
+                        </div>
+                    </div>
+                    <div style="font-weight:800;color:var(--orange);">${t.price.toLocaleString()} ₽</div>
+                </div>
+            </button>`).join('');
+    });
+}
+
+function pickTrainer(id, btn) {
+    state.trainer = trainers.find(t => t.id === id);
+    document.querySelectorAll('.trainer-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    gsap.fromTo(btn, {scale:0.93}, {scale:1, duration:0.36, ease:'back.out(1.8)'});
+    updatePrice();
+}
+
+/* ─── Price — pop animation ─── */
+function updatePrice() {
+    let total = state.price;
+    if (state.trainer) total += state.trainer.price;
+    if (document.getElementById('extra-racket')?.checked) total += 400;
+    const fmt = total.toLocaleString()+' ₽';
+    ['total','pay-total'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = fmt;
+        el.classList.remove('price-pop');
+        void el.offsetWidth;
+        el.classList.add('price-pop');
+    });
+}
+
+/* ─── Payment → Success + Confetti ─── */
+function processPayment() {
+    document.getElementById('succ-court').textContent = 'Корт '+state.court;
+    document.getElementById('succ-time').textContent  = state.time;
+    document.getElementById('succ-price').textContent = document.getElementById('total').textContent;
+    goTo('success');
+    setTimeout(launchConfetti, 300);
+    setTimeout(() => {
+        gsap.fromTo('#success-icon',
+            {scale:0.25, rotation:-20, opacity:0},
+            {scale:1, rotation:0, opacity:1, duration:0.7, ease:'back.out(2.4)'}
+        );
+        // Stagger success rows
+        gsap.from('.summary-box .row', {
+            x:-20, opacity:0, duration:0.35, stagger:0.1, ease:'power2.out', delay:0.4
+        });
+    }, 320);
+}
+
+/* ─── Canvas Confetti ─── */
+function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx    = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height= window.innerHeight;
+
+    const colors = ['#29b6f6','#f06292','#ff7043','#ffd54f','#43e0ff','#b2ff59','#ffffff'];
+    const pieces = Array.from({length:110}, (_, i) => ({
+        x: canvas.width * 0.5 + (Math.random()-0.5) * canvas.width * 0.6,
+        y: -10 - Math.random() * 80,
+        r: 4 + Math.random() * 7,
+        color: colors[i % colors.length],
+        vx: (Math.random()-0.5) * 5,
+        vy: 1.5 + Math.random() * 4.5,
+        spin: (Math.random()-0.5) * 0.22,
+        angle: Math.random() * Math.PI * 2,
+        shape: Math.random() > 0.45 ? 'rect' : 'circle'
+    }));
+
+    let frame = 0;
+    const MAX = 120;
+    (function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.globalAlpha = Math.max(0, 1 - frame/MAX * 1.1);
+            ctx.fillStyle = p.color;
+            if (p.shape === 'circle') {
+                ctx.beginPath();
+                ctx.arc(0,0,p.r,0,Math.PI*2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(-p.r,-p.r*0.4,p.r*2,p.r*0.8);
+            }
+            ctx.restore();
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.1;
+            p.angle += p.spin;
+        });
+        frame++;
+        if (frame < MAX) requestAnimationFrame(draw);
+        else ctx.clearRect(0,0,canvas.width,canvas.height);
+    })();
+}
 </script>
 </body>
 </html>
