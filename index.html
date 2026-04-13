@@ -620,8 +620,16 @@ function goTo(pageId) {
 
 function _showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+    
+    const targetPage = document.getElementById(pageId);
+    
+    // === ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ ===
+    // Сбрасываем стили прозрачности, которые GSAP повесил при выходе со страницы
+    gsap.set(targetPage, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
+    
+    targetPage.classList.add('active');
     window.scrollTo(0,0);
+    
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     const navMap = { home:'nav-home', profile:'nav-profile' };
     if (navMap[pageId]) document.getElementById(navMap[pageId]).classList.add('active');
